@@ -57,4 +57,8 @@
 #include "src/writer/hlsl/generator.h"
 #endif  // TINT_BUILD_HLSL_WRITER
 
+#if TINT_BUILD_ESSL_WRITER
+#include "src/writer/essl/generator.h"
+#endif  // TINT_BUILD_ESSL_WRITER
+
 #endif  // INCLUDE_TINT_TINT_H_

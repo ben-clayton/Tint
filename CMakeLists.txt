@@ -33,6 +33,7 @@ option(TINT_BUILD_HLSL_WRITER "Build the HLSL output writer" ON)
 option(TINT_BUILD_MSL_WRITER "Build the MSL output writer" ON)
 option(TINT_BUILD_SPV_WRITER "Build the SPIR-V output writer" ON)
 option(TINT_BUILD_WGSL_WRITER "Build the WGSL output writer" ON)
+option(TINT_BUILD_ESSL_WRITER "Build the ESSL output writer" ON)
 option(TINT_BUILD_FUZZERS "Build fuzzers" OFF)
 
 option(TINT_ENABLE_MSAN "Enable memory sanitizer" OFF)
@@ -54,7 +55,7 @@ endif(WIN32)
 message(STATUS "Tint build docs: ${TINT_BUILD_DOCS}")
 message(STATUS "Tint build SPIR-V reader: ${TINT_BUILD_SPV_READER}")
 message(STATUS "Tint build WGSL reader: ${TINT_BUILD_WGSL_READER}")
-message(STATUS "Tint build HLSL writer: ${TINT_BUILD_HLSL_WRITER}")
+message(STATUS "Tint build ESSL writer: ${TINT_BUILD_ESSL_WRITER}")
 message(STATUS "Tint build MSL writer: ${TINT_BUILD_MSL_WRITER}")
 message(STATUS "Tint build SPIR-V writer: ${TINT_BUILD_SPV_WRITER}")
 message(STATUS "Tint build WGSL writer: ${TINT_BUILD_WGSL_WRITER}")
@@ -135,6 +136,8 @@ function(tint_default_compile_options TARGET)
       -DTINT_BUILD_SPV_WRITER=$<BOOL:${TINT_BUILD_SPV_WRITER}>)
   target_compile_definitions(${TARGET} PUBLIC
       -DTINT_BUILD_WGSL_WRITER=$<BOOL:${TINT_BUILD_WGSL_WRITER}>)
+  target_compile_definitions(${TARGET} PUBLIC
+      -DTINT_BUILD_ESSL_WRITER=$<BOOL:${TINT_BUILD_ESSL_WRITER}>)
 
   if (${COMPILER_IS_LIKE_GNU})
     target_compile_options(${TARGET} PRIVATE
@@ -148,6 +151,7 @@ function(tint_default_compile_options TARGET)
       -Wno-padded
       -Wno-switch-enum
       -Wno-unknown-pragmas
+      -Wno-unused-private-field
       -pedantic-errors
     )
 
@@ -158,7 +162,6 @@ function(tint_default_compile_options TARGET)
         -Wno-c++98-compat-pedantic
         -Wno-format-pedantic
         -Wno-return-std-move-in-c++11
-        -Wno-unknown-warning-option
         -Weverything
       )
     endif()

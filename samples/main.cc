@@ -35,6 +35,7 @@ enum class Format {
   kWgsl,
   kMsl,
   kHlsl,
+  kEssl,
 };
 
 struct Options {
@@ -59,7 +60,7 @@ struct Options {
 const char kUsage[] = R"(Usage: tint [options] <input-file>
 
  options:
-  --format <spirv|spvasm|wgsl|msl|hlsl>  -- Output format.
+  --format <spirv|spvasm|wgsl|msl|hlsl|essl>  -- Output format.
                                If not provided, will be inferred from output
                                filename extension:
                                    .spvasm -> spvasm
@@ -106,6 +107,11 @@ Format parse_format(const std::string& fmt) {
   if (fmt == "hlsl")
     return Format::kHlsl;
 #endif  // TINT_BUILD_HLSL_WRITER
+
+#if TINT_BUILD_ESSL_WRITER
+  if (fmt == "essl")
+    return Format::kEssl;
+#endif  // TINT_BUILD_ESSL_WRITER
 
   return Format::kNone;
 }
@@ -556,6 +562,13 @@ int main(int argc, const char** argv) {
         std::make_unique<tint::writer::hlsl::Generator>(&ctx, std::move(mod));
   }
 #endif  // TINT_BUILD_HLSL_WRITER
+
+#if TINT_BUILD_ESSL_WRITER
+  if (options.format == Format::kEssl) {
+    writer =
+        std::make_unique<tint::writer::essl::Generator>(&ctx, std::move(mod));
+  }
+#endif  // TINT_BUILD_ESSL_WRITER
 
   if (!writer) {
     std::cerr << "Unknown output format specified" << std::endl;

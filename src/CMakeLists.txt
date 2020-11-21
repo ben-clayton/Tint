@@ -346,6 +346,15 @@ if(${TINT_BUILD_HLSL_WRITER})
   )
 endif()
 
+if(${TINT_BUILD_ESSL_WRITER})
+  list(APPEND TINT_LIB_SRCS
+    writer/essl/generator.cc
+    writer/essl/generator.h
+    writer/essl/generator_impl.cc
+    writer/essl/generator_impl.h
+  )
+endif()
+
 set(TINT_TEST_SRCS
   ast/array_accessor_expression_test.cc
   ast/assignment_statement_test.cc
@@ -688,6 +697,13 @@ if (${TINT_BUILD_HLSL_WRITER})
     writer/hlsl/generator_impl_variable_decl_statement_test.cc
     writer/hlsl/namer_test.cc
     writer/hlsl/test_helper.h
+  )
+endif()
+
+if (${TINT_BUILD_ESSL_WRITER})
+  list(APPEND TINT_TEST_SRCS
+    writer/essl/generator_impl_test.cc
+    writer/essl/test_helper.h
   )
 endif()
 
