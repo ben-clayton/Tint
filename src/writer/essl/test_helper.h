@@ -21,6 +21,7 @@
 #include <utility>
 
 #include "gtest/gtest.h"
+#include "src/ast/builder.h"
 #include "src/ast/module.h"
 #include "src/context.h"
 #include "src/type_determiner.h"
@@ -32,34 +33,21 @@ namespace essl {
 
 /// Helper class for testing
 template <typename BODY>
-class TestHelperBase : public BODY {
- public:
-  TestHelperBase() : td(&ctx, &mod), gen(&mod) {}
-  ~TestHelperBase() = default;
-
-  /// @returns the result string
-  std::string result() const { return out.str(); }
-
-  /// Creates a new `ast::Node` owned by the Module. When the Module is
-  /// destructed, the `ast::Node` will also be destructed.
-  /// @param args the arguments to pass to the type constructor
-  /// @returns the node pointer  template <typename T, typename... ARGS>
-  template <typename T, typename... ARGS>
-  T* create(ARGS&&... args) {
-    return mod.create<T>(std::forward<ARGS>(args)...);
+class TestHelperBase : public ast::BuilderWithContextAndModule, public BODY {
+ protected:
+  void OnVariableBuilt(ast::Variable* var) override {
+    td.RegisterVariableForTesting(var);
   }
 
-  /// The context
-  Context ctx;
-  /// The module
-  ast::Module mod;
-  /// The type determiner
-  TypeDeterminer td;
-  /// The generator
-  GeneratorImpl gen;
+  /// Returns the result string
+  std::string result() const { return out.str(); }
 
   /// The output stream
   std::ostringstream out;
+  /// The type determiner
+  TypeDeterminer td{ctx, mod};
+  /// The generator
+  GeneratorImpl gen{mod};
 };
 using TestHelper = TestHelperBase<testing::Test>;
 

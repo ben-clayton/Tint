@@ -62,6 +62,46 @@ class GeneratorImpl {
                           ast::PipelineStage stage,
                           const std::string& name);
 
+  /// Handles generate an Expression
+  /// @param out the output of the expression stream
+  /// @param expr the expression
+  /// @returns true if the expression was emitted
+  bool EmitExpression(std::ostream& out, ast::Expression* expr);
+  /// Handles generating an identifier expression
+  /// @param out the output stream
+  /// @param expr the identifier expression
+  /// @returns true if the identifier was emitted
+  bool EmitIdentifier(std::ostream& out, ast::IdentifierExpression* expr);
+  /// Handles generating type
+  /// @param out the output stream
+  /// @param type the type to generate
+  /// @param name the name of the variable, only used for array emission
+  /// @returns true if the type is emitted
+  bool EmitType(std::ostream& out,
+                ast::type::Type* type,
+                const std::string& name);
+  /// Handles generating a structure declaration
+  /// @param out the output stream
+  /// @param ty the struct to generate
+  /// @param name the struct name
+  /// @returns true if the struct is emitted
+  bool EmitStructType(std::ostream& out,
+                      const ast::type::StructType* ty,
+                      const std::string& name);
+
+  /// Information on needed ESSL extensions
+  struct ExtensionData {
+    /// Do we need EXT_texture_cube_map_array
+    bool needs_cube_array_ext = false;
+    /// 1D textures are supported, we can't convert if they're used
+    bool has_texture_1d = false;
+  };
+
+  /// Returns information on needed extensions
+  /// @param func the function to gather the data from
+  /// @return the information on needed extensions
+  ExtensionData GatherExtensionData(ast::Function* func);
+
  private:
   void add_error(const std::string& err);
 

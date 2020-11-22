@@ -276,6 +276,34 @@ std::string Function::type_name() const {
 }
 
 const std::vector<std::pair<Variable*, Function::BindingInfo>>
+Function::referenced_texture_variables() const {
+  std::vector<std::pair<Variable*, Function::BindingInfo>> ret;
+
+  for (auto* var : referenced_module_variables()) {
+    auto* unwrapped_type = var->type()->UnwrapIfNeeded();
+    if (!var->IsDecorated() || !unwrapped_type->IsTexture()) {
+      continue;
+    }
+
+    BindingDecoration* binding = nullptr;
+    SetDecoration* set = nullptr;
+    for (auto* deco : var->AsDecorated()->decorations()) {
+      if (deco->IsBinding()) {
+        binding = deco->AsBinding();
+      } else if (deco->IsSet()) {
+        set = deco->AsSet();
+      }
+    }
+    if (binding == nullptr || set == nullptr) {
+      continue;
+    }
+
+    ret.push_back({var, BindingInfo{binding, set}});
+  }
+  return ret;
+}
+
+const std::vector<std::pair<Variable*, Function::BindingInfo>>
 Function::ReferencedSamplerVariablesImpl(type::SamplerKind kind) const {
   std::vector<std::pair<Variable*, Function::BindingInfo>> ret;
 
@@ -283,6 +311,64 @@ Function::ReferencedSamplerVariablesImpl(type::SamplerKind kind) const {
     auto* unwrapped_type = var->type()->UnwrapIfNeeded();
     if (!var->IsDecorated() || !unwrapped_type->IsSampler() ||
         unwrapped_type->AsSampler()->kind() != kind) {
+      continue;
+    }
+
+    BindingDecoration* binding = nullptr;
+    SetDecoration* set = nullptr;
+    for (auto* deco : var->AsDecorated()->decorations()) {
+      if (deco->IsBinding()) {
+        binding = deco->AsBinding();
+      } else if (deco->IsSet()) {
+        set = deco->AsSet();
+      }
+    }
+    if (binding == nullptr || set == nullptr) {
+      continue;
+    }
+
+    ret.push_back({var, BindingInfo{binding, set}});
+  }
+  return ret;
+}
+
+const std::vector<std::pair<Variable*, Function::BindingInfo>>
+Function::referenced_storage_texture_variables() const {
+  std::vector<std::pair<Variable*, Function::BindingInfo>> ret;
+
+  for (auto* var : referenced_module_variables()) {
+    auto* unwrapped_type = var->type()->UnwrapIfNeeded();
+    if (!var->IsDecorated() || !unwrapped_type->IsTexture() ||
+        !unwrapped_type->AsTexture()->IsStorage()) {
+      continue;
+    }
+
+    BindingDecoration* binding = nullptr;
+    SetDecoration* set = nullptr;
+    for (auto* deco : var->AsDecorated()->decorations()) {
+      if (deco->IsBinding()) {
+        binding = deco->AsBinding();
+      } else if (deco->IsSet()) {
+        set = deco->AsSet();
+      }
+    }
+    if (binding == nullptr || set == nullptr) {
+      continue;
+    }
+
+    ret.push_back({var, BindingInfo{binding, set}});
+  }
+  return ret;
+}
+
+const std::vector<std::pair<Variable*, Function::BindingInfo>>
+Function::referenced_depth_texture_variables() const {
+  std::vector<std::pair<Variable*, Function::BindingInfo>> ret;
+
+  for (auto* var : referenced_module_variables()) {
+    auto* unwrapped_type = var->type()->UnwrapIfNeeded();
+    if (!var->IsDecorated() || !unwrapped_type->IsTexture() ||
+        !unwrapped_type->AsTexture()->IsDepth()) {
       continue;
     }
 

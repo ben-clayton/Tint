@@ -152,11 +152,26 @@ class Function : public Node {
   /// @returns the referenced storagebuffers
   const std::vector<std::pair<Variable*, Function::BindingInfo>>
   referenced_comparison_sampler_variables() const;
+  /// Retrieves any referenced texture variables. Note, the
+  /// variables must be decorated with both binding and set decorations.
+  /// @returns the referenced textures
+  const std::vector<std::pair<Variable*, Function::BindingInfo>>
+  referenced_texture_variables() const;
   /// Retrieves any referenced sampled textures variables. Note, the
   /// variables must be decorated with both binding and set decorations.
   /// @returns the referenced sampled textures
   const std::vector<std::pair<Variable*, Function::BindingInfo>>
   referenced_sampled_texture_variables() const;
+  /// Retrieves any referenced storage texture variables. Note, the
+  /// variables must be decorated with both binding and set decorations.
+  /// @returns the referenced sampled textures
+  const std::vector<std::pair<Variable*, Function::BindingInfo>>
+  referenced_storage_texture_variables() const;
+  /// Retrieves any referenced depth texture variables. Note, the
+  /// variables must be decorated with both binding and set decorations.
+  /// @returns the referenced depth textures
+  const std::vector<std::pair<Variable*, Function::BindingInfo>>
+  referenced_depth_texture_variables() const;
   /// Retrieves any referenced multisampled textures variables. Note, the
   /// variables must be decorated with both binding and set decorations.
   /// @returns the referenced sampled textures

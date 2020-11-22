@@ -126,7 +126,7 @@ class GeneratorImpl : public TextGenerator {
   bool EmitFunction(ast::Function* func);
   /// Handles generating an identifier expression
   /// @param expr the identifier expression
-  /// @returns true if the identifeir was emitted
+  /// @returns true if the identifier was emitted
   bool EmitIdentifier(ast::IdentifierExpression* expr);
   /// Handles an if statement
   /// @param stmt the statement to emit
