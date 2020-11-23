@@ -702,6 +702,7 @@ endif()
 
 if (${TINT_BUILD_ESSL_WRITER})
   list(APPEND TINT_TEST_SRCS
+    writer/essl/generator_impl_binary_test.cc
     writer/essl/generator_impl_identifier_test.cc
     writer/essl/generator_impl_test.cc
     writer/essl/generator_impl_type_test.cc

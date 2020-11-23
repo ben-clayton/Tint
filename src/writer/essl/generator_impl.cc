@@ -17,6 +17,7 @@
 #include <sstream>
 
 #include "src/ast/identifier_expression.h"
+#include "src/ast/binary_expression.h"
 #include "src/ast/type/array_type.h"
 #include "src/ast/type/matrix_type.h"
 #include "src/ast/type/struct_type.h"
@@ -98,7 +99,88 @@ GeneratorImpl::ExtensionData GeneratorImpl::GatherExtensionData(
   return ext;
 }
 
+bool GeneratorImpl::EmitBinary(std::ostream& out, ast::BinaryExpression* expr) {
+  out << "(";
+
+  if (!EmitExpression(out, expr->lhs())) {
+    return false;
+  }
+  out << " ";
+
+  switch (expr->op()) {
+    case ast::BinaryOp::kAnd:
+      out << "&";
+      break;
+    case ast::BinaryOp::kOr:
+      out << "|";
+      break;
+    case ast::BinaryOp::kXor:
+      out << "^";
+      break;
+    case ast::BinaryOp::kLogicalAnd:
+      out << "&&";
+      break;
+    case ast::BinaryOp::kLogicalOr:
+      out << "||";
+      break;
+    case ast::BinaryOp::kEqual:
+      out << "==";
+      break;
+    case ast::BinaryOp::kNotEqual:
+      out << "!=";
+      break;
+    case ast::BinaryOp::kLessThan:
+      out << "<";
+      break;
+    case ast::BinaryOp::kGreaterThan:
+      out << ">";
+      break;
+    case ast::BinaryOp::kLessThanEqual:
+      out << "<=";
+      break;
+    case ast::BinaryOp::kGreaterThanEqual:
+      out << ">=";
+      break;
+    case ast::BinaryOp::kShiftLeft:
+      out << "<<";
+      break;
+    case ast::BinaryOp::kShiftRight:
+      out << ">>";
+      break;
+
+    case ast::BinaryOp::kAdd:
+      out << "+";
+      break;
+    case ast::BinaryOp::kSubtract:
+      out << "-";
+      break;
+    case ast::BinaryOp::kMultiply:
+      out << "*";
+      break;
+    case ast::BinaryOp::kDivide:
+      out << "/";
+      break;
+    case ast::BinaryOp::kModulo:
+      out << "%";
+      break;
+    case ast::BinaryOp::kNone:
+      add_error("missing binary operation type");
+      return false;
+  }
+  out << " ";
+
+  if (!EmitExpression(out, expr->rhs())) {
+    return false;
+  }
+
+  out << ")";
+  return true;
+}
+
 bool GeneratorImpl::EmitExpression(std::ostream& out, ast::Expression* expr) {
+  if (expr->IsBinary()) {
+    return EmitBinary(out, expr->AsBinary());
+  }
   if (expr->IsIdentifier()) {
     return EmitIdentifier(out, expr->AsIdentifier());
   }

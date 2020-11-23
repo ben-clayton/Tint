@@ -62,7 +62,13 @@ class GeneratorImpl {
                           ast::PipelineStage stage,
                           const std::string& name);
 
-  /// Handles generate an Expression
+  /// Handles generating a binary expression
+  /// @param out the output of the expression stream
+  /// @param expr the binary expression
+  /// @returns true if the expression was emitted, false otherwise
+  bool EmitBinary(std::ostream& out,
+                  ast::BinaryExpression* expr);
+  /// Handles generating an Expression
   /// @param out the output of the expression stream
   /// @param expr the expression
   /// @returns true if the expression was emitted
