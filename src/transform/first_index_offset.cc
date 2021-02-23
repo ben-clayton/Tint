@@ -185,24 +185,6 @@ Transform::Output FirstIndexOffset::Run(const Program* in) {
                              vertex_index_offset_, instance_index_offset_));
 }
 
-bool FirstIndexOffset::HasVertexIndex() {
-  return has_vertex_index_;
-}
-
-bool FirstIndexOffset::HasInstanceIndex() {
-  return has_instance_index_;
-}
-
-uint32_t FirstIndexOffset::GetFirstVertexOffset() {
-  assert(has_vertex_index_);
-  return vertex_index_offset_;
-}
-
-uint32_t FirstIndexOffset::GetFirstInstanceOffset() {
-  assert(has_instance_index_);
-  return instance_index_offset_;
-}
-
 ast::Variable* FirstIndexOffset::AddUniformBuffer(ProgramBuilder* dst) {
   auto* u32_type = dst->create<type::U32>();
   ast::StructMemberList members;

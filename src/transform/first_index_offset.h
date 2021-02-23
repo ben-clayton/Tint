@@ -101,22 +101,6 @@ class FirstIndexOffset : public Transform {
   /// @returns the transformation result
   Output Run(const Program* program) override;
 
-  /// [DEPRECATED] - Use Data
-  /// @returns whether shader uses vertex_index
-  bool HasVertexIndex();
-
-  /// [DEPRECATED] - Use Data
-  /// @returns whether shader uses instance_index
-  bool HasInstanceIndex();
-
-  /// [DEPRECATED] - Use Data
-  /// @returns offset of firstVertex into constant buffer
-  uint32_t GetFirstVertexOffset();
-
-  /// [DEPRECATED] - Use Data
-  /// @returns offset of firstInstance into constant buffer
-  uint32_t GetFirstInstanceOffset();
-
  private:
   /// Adds uniform buffer with firstVertex/Instance to the program builder
   /// @returns variable of new uniform buffer
